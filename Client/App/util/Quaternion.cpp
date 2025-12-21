@@ -79,41 +79,41 @@ namespace RBX
 	void Quaternion::normalize()
 	{
 		float sqY = square(this->y);
-		float v1 = sqY + square(this->x) + square(this->z) + square(this->w);
-		float v3 = G3D::rsqrt(v1);
-		this->x = this->x * v3;
-		this->y = this->y * v3;
-		this->z = this->z * v3;
-		this->w = this->w * v3;
+		float len = sqY + square(this->x) + square(this->z) + square(this->w);
+		float invLen = rsq(len); // Is there evidence they used rsqrt?
+		this->x *= invLen;
+		this->y *= invLen;
+		this->z *= invLen;
+		this->w *= invLen;
 	}
 
 	void Quaternion::toRotationMatrix(G3D::Matrix3& rot) const
 	{
 		Quaternion QuatMul = *this * 2.0f;
 
-		float v5 = x * QuatMul.x;
-		float v6 = x * QuatMul.y;
-		float v7 = x * QuatMul.z;
+		float xx = x * QuatMul.x;
+		float xy = x * QuatMul.y;
+		float xz = x * QuatMul.z;
 
-		float v8 = w * QuatMul.x;
-		float v9 = w * QuatMul.y;
-		float zz = w * QuatMul.z;
+		float wx = w * QuatMul.x;
+		float wy = w * QuatMul.y;
+		float wz = w * QuatMul.z;
 
-		float v10 = y * QuatMul.y;
-		float v15 = y * QuatMul.z;
-		float v12 = z * QuatMul.z;
+		float yy = y * QuatMul.y;
+		float yz = y * QuatMul.z;
+		float zz = z * QuatMul.z;
 
-		rot[0][0] = 1.0 - (v12 + v10);
-		rot[0][1] = v6 - zz;
-		rot[0][2] = v9 + v7;
+		rot[0][0] = 1.0 - (zz + yy);
+		rot[0][1] = xy - wz;
+		rot[0][2] = wy + xz;
 
-		rot[1][0] = v6 + zz;
-		rot[1][1] = 1.0 - (v12 + v5);
-		rot[1][2] = v15 - v8;
+		rot[1][0] = xy + wz;
+		rot[1][1] = 1.0 - (zz + xx);
+		rot[1][2] = yz - wx;
 
-		rot[2][0] = v7 - v9;
-		rot[2][1] = v8 + v15;
-		rot[2][2] = 1.0 - (v5 + v10);
+		rot[2][0] = xz - wy;
+		rot[2][1] = wx + yz;
+		rot[2][2] = 1.0 - (xx + yy);
 	}
 
 	//needs to be moved to the header

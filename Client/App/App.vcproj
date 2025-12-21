@@ -326,6 +326,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Color.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\util\ComputeProp.h"
 					>
 				</File>
